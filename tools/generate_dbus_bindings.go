@@ -20,7 +20,7 @@ func run() error {
 		filenameSnake := SnakeCase(strings.TrimSuffix(filenameExt, ".xml"))
 		baseDir := path.Join("../interfaces/", filenameSnake)
 		outputFile := path.Join(baseDir, filenameSnake+".go")
-		_ = os.MkdirAll(baseDir, 0755)
+		_ = os.MkdirAll(baseDir, 0750)
 		cmd := exec.Command("dbus-codegen-go")
 		cmd.Args = append(cmd.Args,
 			"--output="+outputFile,
