@@ -288,7 +288,7 @@ func (t *Tray) listen(appName string) error {
 			// oldOwner := sig.Body.V1
 			newOwner := sig.Body.V2
 			if name == "org.kde.StatusNotifierWatcher" {
-				if len(newOwner) == 0 {
+				if newOwner == "" {
 					return fmt.Errorf("stop")
 				} else {
 					log.Printf("Registering !!!")
