@@ -26,19 +26,19 @@ func makePropsSni(id, title string) map[string]*prop.Prop {
 			Value: "face-cool",
 		},
 		"IconPixmap": {
-			Value: Pixmap{},
+			Value: []Pixmap{},
 		},
 		"OverlayIconName": {
 			Value: "",
 		},
 		"OverlayIconPixmap": {
-			Value: Pixmap{},
+			Value: []Pixmap{},
 		},
 		"AttentionIconName": {
 			Value: "",
 		},
 		"AttentionIconPixmap": {
-			Value: Pixmap{},
+			Value: []Pixmap{},
 		},
 		"AttentionMovieName": {
 			Value: "",
