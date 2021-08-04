@@ -35,10 +35,11 @@ func NameBySpec(instance uint32) string {
 		os.Getpid(), instance)
 }
 
-type Pixmap = []struct {
-	A int32
-	B int32
-	C []byte
+type Pixmap struct {
+	Width  int32
+	Heigth int32
+	// Data is represented in ARGB32 format and is in the network byte order
+	Data []byte
 }
 
 type ToolTip = struct {

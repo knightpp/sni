@@ -3,6 +3,8 @@ package sni
 import (
 	"context"
 	"fmt"
+	"image"
+	"image/draw"
 	"log"
 	"sync/atomic"
 
@@ -191,6 +193,42 @@ func (t *Tray) SetTitle(title string) *Tray {
 // SetIconName sets StatusNotifierItem IconName property
 func (t *Tray) SetIconName(name string) *Tray {
 	t.propsSni["IconName"].Value = name
+	return t
+}
+
+// SetIconPixmap sets StatusNotifierItem IconPixmap property.
+// Copies src to a new image and changes pixel format to ARGB32.
+//
+// Note: see SetIconPixmapRaw
+func (t *Tray) SetIconPixmap(src image.Image) *Tray {
+	b := src.Bounds()
+	m := image.NewRGBA(image.Rect(0, 0, b.Dx(), b.Dy()))
+	draw.Draw(m, m.Bounds(), src, b.Min, draw.Src)
+
+	buf := m.Pix
+	// _ = buf[len(buf)]
+	// Swap RGBA to ARGB
+	for i := 0; i < len(buf); i += 4 {
+		buf[i], buf[i+3] = buf[i+3], buf[i]
+		buf[i+1], buf[i+3] = buf[i+3], buf[i+1]
+		buf[i+2], buf[i+3] = buf[i+3], buf[i+2]
+	}
+
+	t.propsSni["IconPixmap"].Value = []Pixmap{
+		{
+			Width:  int32(b.Dx()),
+			Heigth: int32(b.Dy()),
+			Data:   buf,
+		},
+	}
+	return t
+}
+
+// SetIconPixmapRaw sets StatusNotifierItem IconPixmap property.
+//
+// Note: see SetIconPixmap for higher level abstraction
+func (t *Tray) SetIconPixmapRaw(pixmaps []Pixmap) *Tray {
+	t.propsSni["IconPixmap"].Value = pixmaps
 	return t
 }
 
