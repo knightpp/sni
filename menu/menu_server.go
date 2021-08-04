@@ -89,7 +89,7 @@ func (m *MenuServer) AboutToShow(id int32) (needUpdate bool, err *dbus.Error) {
 }
 
 // AboutToShowGroup is com.canonical.dbusmenu.AboutToShowGroup method.
-func (m *MenuServer) AboutToShowGroup(ids []int32) (updatesNeeded []int32, idErrors []int32, err *dbus.Error) {
+func (m *MenuServer) AboutToShowGroup(ids []int32) (updatesNeeded, idErrors []int32, err *dbus.Error) {
 	log.Printf("AboutToShowGroup(ids = %+v)", ids)
 	return
 }
