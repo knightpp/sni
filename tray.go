@@ -307,6 +307,15 @@ func (t *Tray) SignalNewIcon() error {
 	return err
 }
 
+// SignalNewTitle emits signal on dbus notifying system that title was changed
+func (t *Tray) SignalNewTitle() error {
+	return status_notifier_item.Emit(t.conn,
+		&status_notifier_item.StatusNotifierItem_NewTitleSignal{
+			Path: SNI_PATH,
+			Body: &status_notifier_item.StatusNotifierItem_NewTitleSignalBody{},
+		})
+}
+
 // listen blocks forever
 func (t *Tray) listen(appName string) error {
 	err := d_bus.AddMatchSignal(t.conn, &d_bus.DBus_NameOwnerChangedSignal{})
