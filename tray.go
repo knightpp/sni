@@ -35,9 +35,9 @@ type Tray struct {
 	// propsMenu maps dbusmenu prop name to a value
 	propsMenu map[string]*prop.Prop
 	// menuServer implements com.canonical.dbusmenu
-	menuServer *menu.MenuServer
+	menuServer d_bus_menu.Dbusmenuer
 	// sniServer implements org.kde.StatusNotifierWatcher
-	sniServer *sni.SniServer
+	sniServer status_notifier_item.StatusNotifierItemer
 }
 
 // NewTray allocates new Tray. Note: this function doesn't communicate through
@@ -62,6 +62,16 @@ func NewTrayWithConn(conn *dbus.Conn, id, title string, itemTree menu.ItemTree) 
 		menuServer: menu.NewMenuServer(itemTree),
 		sniServer:  sni.NewSniServer(),
 	}
+}
+
+func (t *Tray) SetSniServer(impl status_notifier_item.StatusNotifierItemer) *Tray {
+	t.sniServer = impl
+	return t
+}
+
+func (t *Tray) SetMenuServer(impl d_bus_menu.Dbusmenuer) *Tray {
+	t.menuServer = impl
+	return t
 }
 
 // Close closes underlying dbus connection
@@ -176,137 +186,6 @@ func register(conn *dbus.Conn, service string) error {
 	return err
 }
 
-// SetId sets an id that should be unique for this application and consistent
-// between sessions, such as the application name itself.
-func (t *Tray) SetId(id string) *Tray {
-	t.propsSni["Id"].Value = id
-	return t
-}
-
-// SetTitle sets a name that describes the application, it can be more
-// descriptive than Id.
-func (t *Tray) SetTitle(title string) *Tray {
-	t.propsSni["Title"].Value = title
-	return t
-}
-
-// SetIconName sets StatusNotifierItem IconName property
-func (t *Tray) SetIconName(name string) *Tray {
-	t.propsSni["IconName"].Value = name
-	return t
-}
-
-// SetIconPixmap sets StatusNotifierItem IconPixmap property.
-// Copies src to a new image and changes pixel format to ARGB32.
-//
-// Note: see SetIconPixmapRaw
-func (t *Tray) SetIconPixmap(src image.Image) *Tray {
-	b := src.Bounds()
-	m := image.NewRGBA(image.Rect(0, 0, b.Dx(), b.Dy()))
-	draw.Draw(m, m.Bounds(), src, b.Min, draw.Src)
-
-	buf := m.Pix
-	// _ = buf[len(buf)]
-	// Swap RGBA to ARGB
-	for i := 0; i < len(buf); i += 4 {
-		buf[i], buf[i+3] = buf[i+3], buf[i]
-		buf[i+1], buf[i+3] = buf[i+3], buf[i+1]
-		buf[i+2], buf[i+3] = buf[i+3], buf[i+2]
-	}
-
-	t.propsSni["IconPixmap"].Value = []Pixmap{
-		{
-			Width:  int32(b.Dx()),
-			Heigth: int32(b.Dy()),
-			Data:   buf,
-		},
-	}
-	return t
-}
-
-// SetIconPixmapRaw sets StatusNotifierItem IconPixmap property.
-//
-// Note: see SetIconPixmap for higher level abstraction
-func (t *Tray) SetIconPixmapRaw(pixmaps []Pixmap) *Tray {
-	t.propsSni["IconPixmap"].Value = pixmaps
-	return t
-}
-
-// GetIconName return StatusNotifierItem IconName property
-func (t *Tray) GetIconName() string {
-	v, ok := t.propsSni["IconName"]
-	if !ok {
-		panic("GetIconName(): no such value in a map")
-	}
-	s, ok := v.Value.(string)
-	if !ok {
-		panic("GetIconName(): value is not string")
-	}
-	return s
-}
-
-// SetSniStatus sets StatusNotifierItem Status property.
-//
-// It describes the status of this item or of the associated application.
-//
-// The allowed values for the Status property are:
-//
-// Passive: The item doesn't convey important information to the user, it
-// can be considered an "idle" status and is likely that visualizations
-// will chose to hide it.
-//
-// Active: The item is active, is more important that the item will be shown
-// in some way to the user.
-//
-// NeedsAttention: The item carries really important information for the user,
-// such as battery charge running out and is wants to incentive the direct user
-// intervention. Visualizations should emphasize in some way the items with
-// NeedsAttention status.
-func (t *Tray) SetSniStatus(status sni.Status) *Tray {
-	t.propsSni["Status"].Value = status
-	return t
-}
-
-// Represents the way the text direction of the application. This
-// allows the server to handle mismatches intelligently. For left-
-// to-right the string is "ltr" for right-to-left it is "rtl".
-func (t *Tray) SetMenuTextDirection(dir TextDirection) *Tray {
-	t.propsMenu["TextDirection"].Value = dir
-	return t
-}
-
-// Tells if the menus are in a normal state or they believe that they
-// could use some attention. Cases for showing them would be if help
-// were referring to them or they accessors were being highlighted.
-// This property can have two values:
-//
-// - "normal" in almost all cases and
-//
-// - "notice" when they should have a higher priority to be shown.
-func (t *Tray) SetMenuStatus(status MenuStatus) *Tray {
-	t.propsMenu["Status"].Value = status
-	return t
-}
-
-// A list of directories that should be used for finding icons using
-// the icon naming spec. Ideally there should only be one for the icon
-// theme, but additional ones are often added by applications for
-// app specific icons.
-func (t *Tray) SetMenuIconThemePath(path []string) *Tray {
-	t.propsMenu["IconThemePath"].Value = path
-	return t
-}
-
-// SignalNewIcon emits signal on dbus thus requesting re-rendering of its icon.
-// You should emit this signal to reflect change of the icon visually.
-func (t *Tray) SignalNewIcon() error {
-	err := status_notifier_item.Emit(t.conn, &status_notifier_item.StatusNotifierItem_NewIconSignal{
-		Path: SNI_PATH,
-		Body: &status_notifier_item.StatusNotifierItem_NewIconSignalBody{},
-	})
-	return err
-}
-
 // listen blocks forever
 func (t *Tray) listen(appName string) error {
 	err := d_bus.AddMatchSignal(t.conn, &d_bus.DBus_NameOwnerChangedSignal{})
@@ -340,4 +219,26 @@ func (t *Tray) listen(appName string) error {
 		}
 	}
 	return nil
+}
+
+func imageToArgb32(src image.Image) Pixmap {
+	b := src.Bounds()
+	width := b.Dx()
+	height := b.Dy()
+	m := image.NewRGBA(image.Rect(0, 0, width, height))
+	draw.Draw(m, m.Bounds(), src, b.Min, draw.Src)
+
+	buf := m.Pix
+	// _ = buf[len(buf)]
+	// Swap RGBA to ARGB
+	for i := 0; i < len(buf); i += 4 {
+		buf[i], buf[i+3] = buf[i+3], buf[i]
+		buf[i+1], buf[i+3] = buf[i+3], buf[i+1]
+		buf[i+2], buf[i+3] = buf[i+3], buf[i+2]
+	}
+	return Pixmap{
+		Width:  int32(width),
+		Heigth: int32(height),
+		Data:   buf,
+	}
 }
