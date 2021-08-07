@@ -18,10 +18,10 @@ func run() error {
 	codegen := func(p string, args ...string) error {
 		filenameExt := path.Base(p)
 		filenameSnake := SnakeCase(strings.TrimSuffix(filenameExt, ".xml"))
-		baseDir := path.Join("../interfaces/", filenameSnake)
+		baseDir := path.Join("../generated/", filenameSnake)
 		outputFile := path.Join(baseDir, filenameSnake+".go")
 		_ = os.MkdirAll(baseDir, 0750)
-		cmd := exec.Command("dbus-codegen-go")
+		cmd := exec.Command("./dbus-codegen-go")
 		cmd.Args = append(cmd.Args,
 			"--output="+outputFile,
 			"--package="+filenameSnake)

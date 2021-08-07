@@ -6,6 +6,37 @@ import (
 	"errors"
 	"fmt"
 	"github.com/godbus/dbus/v5"
+	"github.com/godbus/dbus/v5/introspect"
+)
+
+var (
+	// Introspection for org.kde.StatusNotifierWatcher
+	IntrospectDataStatusNotifierWatcher = introspect.Interface{
+		Name: "org.kde.StatusNotifierWatcher",
+		Methods: []introspect.Method{{Name: "RegisterStatusNotifierItem", Args: []introspect.Arg{
+			{Name: "service", Type: "s", Direction: "in"},
+		}},
+			{Name: "RegisterStatusNotifierHost", Args: []introspect.Arg{
+				{Name: "service", Type: "s", Direction: "in"},
+			}},
+		},
+		Signals: []introspect.Signal{{Name: "StatusNotifierItemRegistered", Args: []introspect.Arg{
+			{Name: "", Type: "s", Direction: ""},
+		}},
+			{Name: "StatusNotifierItemUnregistered", Args: []introspect.Arg{
+				{Name: "", Type: "s", Direction: ""},
+			}},
+			{Name: "StatusNotifierHostRegistered"},
+			{Name: "StatusNotifierHostUnregistered"},
+		},
+		Properties: []introspect.Property{{Name: "RegisteredStatusNotifierItems", Type: "as", Access: "read", Annotations: []introspect.Annotation{
+			{Name: "org.qtproject.QtDBus.QtTypeName.Out0", Value: "QStringList"},
+		}},
+			{Name: "IsStatusNotifierHostRegistered", Type: "b", Access: "read"},
+			{Name: "ProtocolVersion", Type: "i", Access: "read"},
+		},
+		Annotations: []introspect.Annotation{},
+	}
 )
 
 // Signal is a common interface for all signals.

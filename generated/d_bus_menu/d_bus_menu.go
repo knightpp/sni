@@ -6,6 +6,70 @@ import (
 	"errors"
 	"fmt"
 	"github.com/godbus/dbus/v5"
+	"github.com/godbus/dbus/v5/introspect"
+)
+
+var (
+	// Introspection for com.canonical.dbusmenu
+	IntrospectDataDbusmenu = introspect.Interface{
+		Name: "com.canonical.dbusmenu",
+		Methods: []introspect.Method{{Name: "GetLayout", Args: []introspect.Arg{
+			{Name: "parentId", Type: "i", Direction: "in"},
+			{Name: "recursionDepth", Type: "i", Direction: "in"},
+			{Name: "propertyNames", Type: "as", Direction: "in"},
+			{Name: "revision", Type: "u", Direction: "out"},
+			{Name: "layout", Type: "(ia{sv}av)", Direction: "out"},
+		}},
+			{Name: "GetGroupProperties", Args: []introspect.Arg{
+				{Name: "ids", Type: "ai", Direction: "in"},
+				{Name: "propertyNames", Type: "as", Direction: "in"},
+				{Name: "properties", Type: "a(ia{sv})", Direction: "out"},
+			}},
+			{Name: "GetProperty", Args: []introspect.Arg{
+				{Name: "id", Type: "i", Direction: "in"},
+				{Name: "name", Type: "s", Direction: "in"},
+				{Name: "value", Type: "v", Direction: "out"},
+			}},
+			{Name: "Event", Args: []introspect.Arg{
+				{Name: "id", Type: "i", Direction: "in"},
+				{Name: "eventId", Type: "s", Direction: "in"},
+				{Name: "data", Type: "v", Direction: "in"},
+				{Name: "timestamp", Type: "u", Direction: "in"},
+			}},
+			{Name: "EventGroup", Args: []introspect.Arg{
+				{Name: "events", Type: "a(isvu)", Direction: "in"},
+				{Name: "idErrors", Type: "ai", Direction: "out"},
+			}},
+			{Name: "AboutToShow", Args: []introspect.Arg{
+				{Name: "id", Type: "i", Direction: "in"},
+				{Name: "needUpdate", Type: "b", Direction: "out"},
+			}},
+			{Name: "AboutToShowGroup", Args: []introspect.Arg{
+				{Name: "ids", Type: "ai", Direction: "in"},
+				{Name: "updatesNeeded", Type: "ai", Direction: "out"},
+				{Name: "idErrors", Type: "ai", Direction: "out"},
+			}},
+		},
+		Signals: []introspect.Signal{{Name: "ItemsPropertiesUpdated", Args: []introspect.Arg{
+			{Name: "updatedProps", Type: "a(ia{sv})", Direction: "out"},
+			{Name: "removedProps", Type: "a(ias)", Direction: "out"},
+		}},
+			{Name: "LayoutUpdated", Args: []introspect.Arg{
+				{Name: "revision", Type: "u", Direction: "out"},
+				{Name: "parent", Type: "i", Direction: "out"},
+			}},
+			{Name: "ItemActivationRequested", Args: []introspect.Arg{
+				{Name: "id", Type: "i", Direction: "out"},
+				{Name: "timestamp", Type: "u", Direction: "out"},
+			}},
+		},
+		Properties: []introspect.Property{{Name: "Version", Type: "u", Access: "read"},
+			{Name: "TextDirection", Type: "s", Access: "read"},
+			{Name: "Status", Type: "s", Access: "read"},
+			{Name: "IconThemePath", Type: "as", Access: "read"},
+		},
+		Annotations: []introspect.Annotation{},
+	}
 )
 
 // Signal is a common interface for all signals.

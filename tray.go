@@ -8,10 +8,10 @@ import (
 	"log"
 	"sync/atomic"
 
-	"github.com/knightpp/sni/interfaces/d_bus"
-	"github.com/knightpp/sni/interfaces/d_bus_menu"
-	"github.com/knightpp/sni/interfaces/status_notifier_item"
-	"github.com/knightpp/sni/interfaces/status_notifier_watcher"
+	"github.com/knightpp/sni/generated/d_bus"
+	"github.com/knightpp/sni/generated/d_bus_menu"
+	"github.com/knightpp/sni/generated/status_notifier_item"
+	"github.com/knightpp/sni/generated/status_notifier_watcher"
 	"github.com/knightpp/sni/menu"
 	"github.com/knightpp/sni/sni"
 
@@ -110,13 +110,13 @@ func (t *Tray) Setup() error {
 
 	props := make(map[string]map[string]*prop.Prop)
 	props[SNI_INTERFACE_NAME] = t.propsSni
-	sniProp, err := prop.Export(t.conn, SNI_PATH, props)
+	_, err = prop.Export(t.conn, SNI_PATH, props)
 	if err != nil {
 		return err
 	}
 	props = make(map[string]map[string]*prop.Prop)
 	props[DBUSMENU_INTERFACE_NAME] = t.propsMenu
-	menuProp, err := prop.Export(t.conn, MENU_PATH, props)
+	_, err = prop.Export(t.conn, MENU_PATH, props)
 	if err != nil {
 		return err
 	}
@@ -127,13 +127,7 @@ func (t *Tray) Setup() error {
 		Interfaces: []introspect.Interface{
 			introspect.IntrospectData,
 			prop.IntrospectData,
-			{
-				Name: status_notifier_item.InterfaceStatusNotifierItem,
-				Methods: introspect.Methods(
-					status_notifier_item.StatusNotifierItemer(t.sniServer)),
-				Properties: sniProp.Introspection(SNI_INTERFACE_NAME),
-				Signals:    nil,
-			},
+			status_notifier_item.IntrospectDataStatusNotifierItem,
 		},
 	}
 	err = t.conn.Export(introspect.NewIntrospectable(&sniNode), SNI_PATH,
@@ -147,14 +141,7 @@ func (t *Tray) Setup() error {
 		Interfaces: []introspect.Interface{
 			introspect.IntrospectData,
 			prop.IntrospectData,
-			{
-				Name: d_bus_menu.InterfaceDbusmenu,
-				Methods: introspect.Methods(
-					d_bus_menu.Dbusmenuer(t.menuServer),
-				),
-				Properties: menuProp.Introspection(DBUSMENU_INTERFACE_NAME),
-				Signals:    nil,
-			},
+			d_bus_menu.IntrospectDataDbusmenu,
 		},
 	}
 	err = t.conn.Export(introspect.NewIntrospectable(&menuNode), MENU_PATH,

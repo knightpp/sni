@@ -3,7 +3,7 @@ package menu
 import (
 	"log"
 
-	"github.com/knightpp/sni/interfaces/d_bus_menu"
+	"github.com/knightpp/sni/generated/d_bus_menu"
 
 	"github.com/godbus/dbus/v5"
 )

@@ -6,6 +6,103 @@ import (
 	"errors"
 	"fmt"
 	"github.com/godbus/dbus/v5"
+	"github.com/godbus/dbus/v5/introspect"
+)
+
+var (
+	// Introspection for org.freedesktop.DBus
+	IntrospectDataDBus = introspect.Interface{
+		Name: "org.freedesktop.DBus",
+		Methods: []introspect.Method{{Name: "Hello", Args: []introspect.Arg{
+			{Name: "", Type: "s", Direction: "out"},
+		}},
+			{Name: "RequestName", Args: []introspect.Arg{
+				{Name: "", Type: "s", Direction: "in"},
+				{Name: "", Type: "u", Direction: "in"},
+				{Name: "", Type: "u", Direction: "out"},
+			}},
+			{Name: "ReleaseName", Args: []introspect.Arg{
+				{Name: "", Type: "s", Direction: "in"},
+				{Name: "", Type: "u", Direction: "out"},
+			}},
+			{Name: "StartServiceByName", Args: []introspect.Arg{
+				{Name: "", Type: "s", Direction: "in"},
+				{Name: "", Type: "u", Direction: "in"},
+				{Name: "", Type: "u", Direction: "out"},
+			}},
+			{Name: "UpdateActivationEnvironment", Args: []introspect.Arg{
+				{Name: "", Type: "a{ss}", Direction: "in"},
+			}},
+			{Name: "NameHasOwner", Args: []introspect.Arg{
+				{Name: "", Type: "s", Direction: "in"},
+				{Name: "", Type: "b", Direction: "out"},
+			}},
+			{Name: "ListNames", Args: []introspect.Arg{
+				{Name: "", Type: "as", Direction: "out"},
+			}},
+			{Name: "ListActivatableNames", Args: []introspect.Arg{
+				{Name: "", Type: "as", Direction: "out"},
+			}},
+			{Name: "AddMatch", Args: []introspect.Arg{
+				{Name: "", Type: "s", Direction: "in"},
+			}},
+			{Name: "RemoveMatch", Args: []introspect.Arg{
+				{Name: "", Type: "s", Direction: "in"},
+			}},
+			{Name: "GetNameOwner", Args: []introspect.Arg{
+				{Name: "", Type: "s", Direction: "in"},
+				{Name: "", Type: "s", Direction: "out"},
+			}},
+			{Name: "ListQueuedOwners", Args: []introspect.Arg{
+				{Name: "", Type: "s", Direction: "in"},
+				{Name: "", Type: "as", Direction: "out"},
+			}},
+			{Name: "GetConnectionUnixUser", Args: []introspect.Arg{
+				{Name: "", Type: "s", Direction: "in"},
+				{Name: "", Type: "u", Direction: "out"},
+			}},
+			{Name: "GetConnectionUnixProcessID", Args: []introspect.Arg{
+				{Name: "", Type: "s", Direction: "in"},
+				{Name: "", Type: "u", Direction: "out"},
+			}},
+			{Name: "GetAdtAuditSessionData", Args: []introspect.Arg{
+				{Name: "", Type: "s", Direction: "in"},
+				{Name: "", Type: "ay", Direction: "out"},
+			}},
+			{Name: "GetConnectionSELinuxSecurityContext", Args: []introspect.Arg{
+				{Name: "", Type: "s", Direction: "in"},
+				{Name: "", Type: "ay", Direction: "out"},
+			}},
+			{Name: "ReloadConfig", Args: []introspect.Arg{}},
+			{Name: "GetId", Args: []introspect.Arg{
+				{Name: "", Type: "s", Direction: "out"},
+			}},
+			{Name: "GetConnectionCredentials", Args: []introspect.Arg{
+				{Name: "", Type: "s", Direction: "in"},
+				{Name: "", Type: "a{sv}", Direction: "out"},
+			}},
+		},
+		Signals: []introspect.Signal{{Name: "NameOwnerChanged", Args: []introspect.Arg{
+			{Name: "", Type: "s", Direction: ""},
+			{Name: "", Type: "s", Direction: ""},
+			{Name: "", Type: "s", Direction: ""},
+		}},
+			{Name: "NameLost", Args: []introspect.Arg{
+				{Name: "", Type: "s", Direction: ""},
+			}},
+			{Name: "NameAcquired", Args: []introspect.Arg{
+				{Name: "", Type: "s", Direction: ""},
+			}},
+		},
+		Properties: []introspect.Property{{Name: "Features", Type: "as", Access: "read", Annotations: []introspect.Annotation{
+			{Name: "org.freedesktop.DBus.Property.EmitsChangedSignal", Value: "const"},
+		}},
+			{Name: "Interfaces", Type: "as", Access: "read", Annotations: []introspect.Annotation{
+				{Name: "org.freedesktop.DBus.Property.EmitsChangedSignal", Value: "const"},
+			}},
+		},
+		Annotations: []introspect.Annotation{},
+	}
 )
 
 // Signal is a common interface for all signals.

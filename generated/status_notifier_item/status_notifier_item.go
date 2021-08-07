@@ -6,6 +6,66 @@ import (
 	"errors"
 	"fmt"
 	"github.com/godbus/dbus/v5"
+	"github.com/godbus/dbus/v5/introspect"
+)
+
+var (
+	// Introspection for org.kde.StatusNotifierItem
+	IntrospectDataStatusNotifierItem = introspect.Interface{
+		Name: "org.kde.StatusNotifierItem",
+		Methods: []introspect.Method{{Name: "ContextMenu", Args: []introspect.Arg{
+			{Name: "x", Type: "i", Direction: "in"},
+			{Name: "y", Type: "i", Direction: "in"},
+		}},
+			{Name: "Activate", Args: []introspect.Arg{
+				{Name: "x", Type: "i", Direction: "in"},
+				{Name: "y", Type: "i", Direction: "in"},
+			}},
+			{Name: "SecondaryActivate", Args: []introspect.Arg{
+				{Name: "x", Type: "i", Direction: "in"},
+				{Name: "y", Type: "i", Direction: "in"},
+			}},
+			{Name: "Scroll", Args: []introspect.Arg{
+				{Name: "delta", Type: "i", Direction: "in"},
+				{Name: "orientation", Type: "s", Direction: "in"},
+			}},
+		},
+		Signals: []introspect.Signal{{Name: "NewTitle"},
+			{Name: "NewIcon"},
+			{Name: "NewAttentionIcon"},
+			{Name: "NewOverlayIcon"},
+			{Name: "NewToolTip"},
+			{Name: "NewStatus", Args: []introspect.Arg{
+				{Name: "status", Type: "s", Direction: ""},
+			}},
+		},
+		Properties: []introspect.Property{{Name: "Category", Type: "s", Access: "read"},
+			{Name: "Id", Type: "s", Access: "read"},
+			{Name: "Title", Type: "s", Access: "read"},
+			{Name: "Status", Type: "s", Access: "read"},
+			{Name: "WindowId", Type: "i", Access: "read"},
+			{Name: "IconThemePath", Type: "s", Access: "read"},
+			{Name: "Menu", Type: "o", Access: "read"},
+			{Name: "ItemIsMenu", Type: "b", Access: "read"},
+			{Name: "IconName", Type: "s", Access: "read"},
+			{Name: "IconPixmap", Type: "a(iiay)", Access: "read", Annotations: []introspect.Annotation{
+				{Name: "org.qtproject.QtDBus.QtTypeName", Value: "KDbusImageVector"},
+			}},
+			{Name: "OverlayIconName", Type: "s", Access: "read"},
+			{Name: "OverlayIconPixmap", Type: "a(iiay)", Access: "read", Annotations: []introspect.Annotation{
+				{Name: "org.qtproject.QtDBus.QtTypeName", Value: "KDbusImageVector"},
+			}},
+			{Name: "AttentionIconName", Type: "s", Access: "read"},
+			{Name: "AttentionIconPixmap", Type: "a(iiay)", Access: "read", Annotations: []introspect.Annotation{
+				{Name: "org.qtproject.QtDBus.QtTypeName", Value: "KDbusImageVector"},
+			}},
+			{Name: "AttentionMovieName", Type: "s", Access: "read"},
+			{Name: "ToolTip", Type: "(sa(iiay)ss)", Access: "read", Annotations: []introspect.Annotation{
+				{Name: "org.qtproject.QtDBus.QtTypeName", Value: "KDbusToolTipStruct"},
+			}},
+		},
+		Annotations: []introspect.Annotation{},
+	}
 )
 
 // Signal is a common interface for all signals.

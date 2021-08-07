@@ -3,7 +3,7 @@ package sni
 import (
 	"log"
 
-	"github.com/knightpp/sni/interfaces/status_notifier_item"
+	"github.com/knightpp/sni/generated/status_notifier_item"
 
 	"github.com/godbus/dbus/v5"
 )
