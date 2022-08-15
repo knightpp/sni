@@ -1,4 +1,4 @@
-package sni
+package tray
 
 import (
 	"context"
@@ -12,8 +12,8 @@ import (
 	"github.com/knightpp/sni/generated/d_bus_menu"
 	"github.com/knightpp/sni/generated/status_notifier_item"
 	"github.com/knightpp/sni/generated/status_notifier_watcher"
-	"github.com/knightpp/sni/menu"
-	"github.com/knightpp/sni/sni"
+	"github.com/knightpp/sni/pkg/menu"
+	"github.com/knightpp/sni/pkg/sni"
 
 	"github.com/godbus/dbus/v5"
 	"github.com/godbus/dbus/v5/introspect"

@@ -6,7 +6,7 @@ import (
 	"os/signal"
 
 	"github.com/knightpp/sni"
-	"github.com/knightpp/sni/menu"
+	"github.com/knightpp/sni/pkg/menu"
 )
 
 func main() {

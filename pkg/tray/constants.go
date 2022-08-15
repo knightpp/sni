@@ -1,4 +1,4 @@
-package sni
+package tray
 
 import (
 	"fmt"

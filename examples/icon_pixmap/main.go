@@ -8,8 +8,8 @@ import (
 	"os/signal"
 	"strings"
 
-	"github.com/knightpp/sni"
-	"github.com/knightpp/sni/menu"
+	"github.com/knightpp/sni/pkg/menu"
+	"github.com/knightpp/sni/pkg/tray"
 )
 
 func main() {
@@ -20,7 +20,7 @@ func main() {
 
 func run() error {
 	tree := menu.NewItem().Build()
-	tray, err := sni.NewTray("MyApp", "Descriptive title", tree)
+	tray, err := tray.NewTray("MyApp", "Descriptive title", tree)
 	if err != nil {
 		return err
 	}

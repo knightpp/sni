@@ -3,7 +3,7 @@ package menu_test
 import (
 	"testing"
 
-	"github.com/knightpp/sni/menu"
+	"github.com/knightpp/sni/pkg/menu"
 
 	"github.com/godbus/dbus/v5"
 	"github.com/stretchr/testify/assert"

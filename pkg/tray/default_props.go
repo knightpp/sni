@@ -1,8 +1,8 @@
-package sni
+package tray
 
 import (
 	"github.com/godbus/dbus/v5/prop"
-	"github.com/knightpp/sni/sni"
+	"github.com/knightpp/sni/pkg/sni"
 )
 
 func makePropsSni(id, title string) map[string]*prop.Prop {
