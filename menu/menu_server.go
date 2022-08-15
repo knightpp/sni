@@ -34,8 +34,11 @@ type Layout = struct {
 	V2 []dbus.Variant
 }
 
-func (m *MenuServer) GetLayout(parentId int32, recursionDepth int32,
-	propertyNames []string) (revision uint32, layout Layout, err *dbus.Error) {
+func (m *MenuServer) GetLayout(
+	parentId int32,
+	recursionDepth int32,
+	propertyNames []string,
+) (revision uint32, layout Layout, err *dbus.Error) {
 	layout = m.tree.ToLayout()
 	log.Printf("GetLayout(parentId = %d, recursionDepth = %d,"+
 		"propertyNames = %+v) return %+v",
@@ -47,7 +50,8 @@ func (m *MenuServer) GetLayout(parentId int32, recursionDepth int32,
 func (m *MenuServer) GetGroupProperties(ids []int32, propertyNames []string) (properties []struct {
 	V0 int32
 	V1 map[string]dbus.Variant
-}, err *dbus.Error) {
+}, err *dbus.Error,
+) {
 	log.Printf("GetGroupProperties(ids = %+v, propertyNames = %+v)", ids, propertyNames)
 	return
 }
@@ -77,7 +81,8 @@ func (m *MenuServer) EventGroup(events []struct {
 	V1 string
 	V2 dbus.Variant
 	V3 uint32
-}) (idErrors []int32, err *dbus.Error) {
+},
+) (idErrors []int32, err *dbus.Error) {
 	log.Printf("EventGroup(events = %+v)", events)
 	return
 }

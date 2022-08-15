@@ -5,8 +5,10 @@ import (
 	"os"
 )
 
-type TextDirection = string
-type MenuStatus = string
+type (
+	TextDirection = string
+	MenuStatus    = string
+)
 
 const (
 	MENU_PATH = "/MenuBar"
@@ -31,8 +33,7 @@ const (
 // NameBySpec returns name in format defined in the spec. For example:
 // org.kdeStatusNotifierItem-<process id>-<instance number>
 func NameBySpec(instance uint32) string {
-	return fmt.Sprintf("org.kde.StatusNotifierItem-%d-%d",
-		os.Getpid(), instance)
+	return fmt.Sprintf("org.kde.StatusNotifierItem-%d-%d", os.Getpid(), instance)
 }
 
 type Pixmap struct {
@@ -42,7 +43,7 @@ type Pixmap struct {
 	Data []byte
 }
 
-type ToolTip = struct {
+type ToolTip struct {
 	First  string
 	Second []struct {
 		First  int32

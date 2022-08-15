@@ -501,7 +501,8 @@ func (o *DBus) GetConnectionCredentials(ctx context.Context, in0 string) (out0 m
 // GetFeatures gets org.freedesktop.DBus.Features property.
 //
 // Annotations:
-//   @org.freedesktop.DBus.Property.EmitsChangedSignal = const
+//
+//	@org.freedesktop.DBus.Property.EmitsChangedSignal = const
 func (o *DBus) GetFeatures(ctx context.Context) (features []string, err error) {
 	err = o.object.CallWithContext(ctx, "org.freedesktop.DBus.Properties.Get", 0, InterfaceDBus, "Features").Store(&features)
 	return
@@ -510,7 +511,8 @@ func (o *DBus) GetFeatures(ctx context.Context) (features []string, err error) {
 // GetInterfaces gets org.freedesktop.DBus.Interfaces property.
 //
 // Annotations:
-//   @org.freedesktop.DBus.Property.EmitsChangedSignal = const
+//
+//	@org.freedesktop.DBus.Property.EmitsChangedSignal = const
 func (o *DBus) GetInterfaces(ctx context.Context) (interfaces []string, err error) {
 	err = o.object.CallWithContext(ctx, "org.freedesktop.DBus.Properties.Get", 0, InterfaceDBus, "Interfaces").Store(&interfaces)
 	return

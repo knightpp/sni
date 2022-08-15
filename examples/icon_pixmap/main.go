@@ -17,6 +17,7 @@ func main() {
 		log.Fatal(err)
 	}
 }
+
 func run() error {
 	tree := menu.NewItem().Build()
 	tray, err := sni.NewTray("MyApp", "Descriptive title", tree)

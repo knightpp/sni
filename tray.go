@@ -158,7 +158,6 @@ func (t *Tray) Setup() error {
 		if err := t.listen(name); err != nil {
 			log.Print("NameOwnerChanged listener exitted with error: ", err)
 		}
-
 	}(name)
 	return nil
 }

@@ -4,17 +4,19 @@ import (
 	"github.com/godbus/dbus/v5"
 )
 
-type ToggleType string
-type Disposition string
+type (
+	ToggleType  string
+	Disposition string
+)
 
 const (
-	ToggleTypeCheckmark = "checkmark"
-	ToggleTypeRadio     = "radio"
+	ToggleTypeCheckmark ToggleType = "checkmark"
+	ToggleTypeRadio     ToggleType = "radio"
 
-	DispositionNormal      = "normal"
-	DispositionInformative = "informative"
-	DispositionWarning     = "warning"
-	DispositionAlert       = "alert"
+	DispositionNormal      Disposition = "normal"
+	DispositionInformative Disposition = "informative"
+	DispositionWarning     Disposition = "warning"
+	DispositionAlert       Disposition = "alert"
 )
 
 type ItemTree struct {
@@ -34,8 +36,8 @@ func (i *Item) toLayout() Layout {
 			dbus.MakeVariant(child.toLayout()))
 	}
 	return layout
-
 }
+
 func (item *Item) forEach(fn func(*Item)) {
 	fn(item)
 	for _, child := range item.children {
@@ -59,6 +61,7 @@ func (i *Item) Build() ItemTree {
 	i.build(0)
 	return ItemTree{root: i}
 }
+
 func (i *Item) build(id int32) {
 	i.id = id
 	for _, child := range i.children {
@@ -66,6 +69,7 @@ func (i *Item) build(id int32) {
 		child.build(id)
 	}
 }
+
 func (i *Item) OnClick(fn func()) *Item {
 	i.onClick = fn
 	return i
@@ -77,34 +81,42 @@ func (i *Item) Separator(b bool) *Item {
 	}
 	return i
 }
+
 func (i *Item) Label(label string) *Item {
 	i.properties["label"] = dbus.MakeVariant(label)
 	return i
 }
+
 func (i *Item) CanBeActivated(b bool) *Item {
 	i.properties["enabled"] = dbus.MakeVariant(b)
 	return i
 }
+
 func (i *Item) Visible(b bool) *Item {
 	i.properties["visible"] = dbus.MakeVariant(b)
 	return i
 }
+
 func (i *Item) IconName(iconName string) *Item {
 	i.properties["icon-name"] = dbus.MakeVariant(iconName)
 	return i
 }
+
 func (i *Item) IconData(data []byte) *Item {
 	i.properties["icon-data"] = dbus.MakeVariant(data)
 	return i
 }
+
 func (i *Item) Shortcut(shortcut [][]string) *Item {
 	i.properties["shortcut"] = dbus.MakeVariant(shortcut)
 	return i
 }
+
 func (i *Item) ToggleType(tt ToggleType) *Item {
 	i.properties["toggle-type"] = dbus.MakeVariant(tt)
 	return i
 }
+
 func (i *Item) ToggleState(onoff bool) *Item {
 	num := uint32(0)
 	if onoff {
@@ -113,11 +125,13 @@ func (i *Item) ToggleState(onoff bool) *Item {
 	i.properties["toggle-state"] = dbus.MakeVariant(num)
 	return i
 }
+
 func (i *Item) Submenu(children ...*Item) *Item {
 	i.properties["children-display"] = dbus.MakeVariant("submenu")
 	i.children = children
 	return i
 }
+
 func (i *Item) Disposition(d Disposition) *Item {
 	i.properties["disposition"] = dbus.MakeVariant(d)
 	return i

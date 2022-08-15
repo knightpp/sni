@@ -14,6 +14,7 @@ func main() {
 		log.Fatal(err)
 	}
 }
+
 func run() error {
 	tree := menu.NewItem().Submenu(
 		menu.NewItem().Label("Button 1").IconName("emblem-default").

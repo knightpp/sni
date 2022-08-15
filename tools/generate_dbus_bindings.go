@@ -14,13 +14,14 @@ func main() {
 		log.Fatal(err)
 	}
 }
+
 func run() error {
 	codegen := func(p string, args ...string) error {
 		filenameExt := path.Base(p)
 		filenameSnake := SnakeCase(strings.TrimSuffix(filenameExt, ".xml"))
 		baseDir := path.Join("../generated/", filenameSnake)
 		outputFile := path.Join(baseDir, filenameSnake+".go")
-		_ = os.MkdirAll(baseDir, 0750)
+		_ = os.MkdirAll(baseDir, 0o750)
 		cmd := exec.Command("./dbus-codegen-go")
 		cmd.Args = append(cmd.Args,
 			"--output="+outputFile,
@@ -53,6 +54,7 @@ func run() error {
 
 	return nil
 }
+
 func SnakeCase(camel string) string {
 	var buf bytes.Buffer
 	for _, c := range camel {

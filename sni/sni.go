@@ -1,7 +1,9 @@
 package sni
 
-type Status string
-type Category string
+type (
+	Status   string
+	Category string
+)
 
 const (
 	// StatusPassive doesn't convey important information to the user, it can
