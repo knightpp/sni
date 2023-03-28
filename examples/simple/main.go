@@ -5,8 +5,8 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/knightpp/sni"
 	"github.com/knightpp/sni/pkg/menu"
+	"github.com/knightpp/sni/pkg/tray"
 )
 
 func main() {
@@ -27,11 +27,13 @@ func run() error {
 				log.Print("Button 2 clicked!!!")
 			}),
 	).Build()
-	tray, err := sni.NewTray("MyApp", "Descriptive title", tree)
+
+	tray, err := tray.NewTray("MyApp", "Descriptive title", tree)
 	if err != nil {
 		return err
 	}
 	defer tray.Close()
+
 	err = tray.Setup()
 	if err != nil {
 		return err
@@ -47,7 +49,7 @@ func run() error {
 	// 			log.Print("Error: ", err)
 	// 			break
 	// 		}
-	// 		time.Sleep(time.Second)
+	// 		time.Sleep(2 * time.Second)
 	// 		tray.SetIconName("emblem-default")
 	// 		log.Print("Changed to: ", tray.GetIconName())
 	// 		err = tray.SignalNewIcon()
@@ -55,7 +57,7 @@ func run() error {
 	// 			log.Print("Error: ", err)
 	// 			break
 	// 		}
-	// 		time.Sleep(time.Second)
+	// 		time.Sleep(2 * time.Second)
 	// 	}
 	// }()
 
