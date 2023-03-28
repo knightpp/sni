@@ -1,10 +1,10 @@
 module github.com/knightpp/sni
 
-go 1.19
+go 1.20
 
 require (
 	github.com/godbus/dbus/v5 v5.1.0
-	github.com/stretchr/testify v1.8.0
+	github.com/stretchr/testify v1.8.2
 )
 
 require (
